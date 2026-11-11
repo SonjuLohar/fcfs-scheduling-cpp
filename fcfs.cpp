@@ -4,35 +4,36 @@ using namespace std;
 
 // FCFS (First Come First Serve) CPU Scheduling
 class FCFS {
-    int n;                                   // total process shongkha
+    int n;                                   // total number of processes
     int at[100], bt[100], ct[100], tat[100], wt[100];
-    // at  = Arrival Time     (process kokhon ashlo)
-    // bt  = Burst Time       (CPU te koto shomoy lagbe)
-    // ct  = Completion Time  (kokhon shesh hoyeche)
-    // tat = Turnaround Time  (shesh hoyar shomoy - ashar shomoy)fcfs.cpp
-    // wt  = Waiting Time     (koto shomoy opekkha korte hoyeche)
+    // at  = Arrival Time     (when the process arrives)
+    // bt  = Burst Time       (CPU time required by the process)
+    // ct  = Completion Time  (when the process finishes)
+    // tat = Turnaround Time  (completion time - arrival time)
+    // wt  = Waiting Time     (time spent waiting in the ready queue)
 
 public:
 
-    // User theke input nowar function
+    // Function to take input from the user
     void input() {
         cout << "Enter number of processes: ";
-        cin >> n;                            // process er shongkha input
+        cin >> n;                            // read number of processes
 
         for (int i = 0; i < n; i++) {
             cout << "Enter AT and BT for P" << i + 1 << ": ";
-            cin >> at[i] >> bt[i];           // protita process er AT ar BT input
+            cin >> at[i] >> bt[i];           // read AT and BT of each process
         }
     }
 
-    // CT, TAT ar WT hishab korar function
+    // Function to calculate CT, TAT and WT
     void calculate() {
 
-        // prothom process er CT = AT + BT
+        // Completion time of the first process = AT + BT
         ct[0] = at[0] + bt[0];
 
-        // baki process er CT = (ager process er CT ar nijer AT er boro ta) + BT
-        // max use kora hoyeche karon CPU idle thakte pare (process ashar age)
+        // For the remaining processes:
+        // CT = max(previous process CT, own AT) + BT
+        // max is used because the CPU may be idle until the process arrives
         for (int i = 1; i < n; i++) {
             ct[i] = max(ct[i - 1], at[i]) + bt[i];
         }
@@ -43,13 +44,13 @@ public:
         }
     }
 
-    // Result table print korar function
+    // Function to print the result table
     void display() {
 
-        int totalWT = 0;                     // moট waiting time
-        int totalTAT = 0;                    // mot turnaround time
+        int totalWT = 0;                     // sum of all waiting times
+        int totalTAT = 0;                    // sum of all turnaround times
 
-        // table er header print
+        // Print table header
         cout << "\n";
         cout << left
              << setw(6) << "P"
@@ -59,24 +60,24 @@ public:
              << setw(7) << "TAT"
              << setw(6) << "WT" << endl;
 
-        // protita process er data print
+        // Print data of each process
         for (int i = 0; i < n; i++) {
 
             cout << left
-                 << setw(6) << "P" + to_string(i + 1)   // process er naam (P1, P2...)
+                 << setw(6) << "P" + to_string(i + 1)   // process name (P1, P2, ...)
                  << setw(6) << at[i]
                  << setw(6) << bt[i]
                  << setw(6) << ct[i]
-                 << setw(6) << tat[i]
+                 << setw(7) << tat[i]
                  << setw(6) << wt[i] << endl;
 
-            totalWT += wt[i];                // average er jonno jog korchi
+            totalWT += wt[i];                // add up for the average
             totalTAT += tat[i];
         }
 
-        cout << fixed << setprecision(2);    // dosomik er por 2 ghor porjonto dekhabe
+        cout << fixed << setprecision(2);    // show 2 digits after the decimal point
 
-        // average = mot / process shongkha
+        // average = total / number of processes
         cout << "Average Waiting Time = " << (float)totalWT / n << endl;
         cout << "Average Turnaround Time = " << (float)totalTAT / n << endl;
     }
@@ -84,11 +85,11 @@ public:
 
 int main() {
 
-    FCFS obj;           // class er object toiri
+    FCFS obj;           // create an object of the class
 
-    obj.input();        // 1. input nao
-    obj.calculate();    // 2. hishab koro
-    obj.display();      // 3. result dekhao
+    obj.input();        // 1. take input
+    obj.calculate();    // 2. do the calculations
+    obj.display();      // 3. show the result
 
     return 0;
 }
